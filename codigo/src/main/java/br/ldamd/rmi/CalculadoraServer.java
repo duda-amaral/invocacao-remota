@@ -1,4 +1,4 @@
-package br.ldamd;
+package br.ldamd.rmi;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;

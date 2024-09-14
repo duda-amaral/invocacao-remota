@@ -1,13 +1,8 @@
-package br.ldamd;
+package br.ldamd.local;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class Calculadora extends UnicastRemoteObject implements ICalculadora {
-
-    protected Calculadora() throws RemoteException {
-        super();
-    }
+public class CalculadoraLocal {
 
     public double somar(double num1, double num2) throws RemoteException {
         return num1 + num2;

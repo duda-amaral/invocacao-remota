@@ -1,5 +1,7 @@
-package br.ldamd;
+package br.ldamd.rmi;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -13,7 +15,8 @@ public class CalculadoraClient {
             DecimalFormat df = new DecimalFormat("#.##");
 
 
-        try {
+        try(FileWriter writer = new FileWriter("execucao_calculadora_rmi.txt", true)) {
+                long inicio = System.currentTimeMillis();
                 ICalculadora calc = (ICalculadora) Naming.lookup(servidor + nome);
 
                 // Testa as operações aritméticas básicas
@@ -45,16 +48,17 @@ public class CalculadoraClient {
                 // Testa operações para amortização e financiamentos
                 System.out.println("Parcela Sistema Price (capital=1000, taxa=0.05, tempo=12): " + df.format(calc.parcelaSistemaPrice(1000, 0.05, 12)));
                 System.out.println("Amortização SAC (capital=1000, tempo=12): " + df.format(calc.amortizacaoSAC(1000, 12)));
-            } catch (MalformedURLException e) {
-                System.out.println("URL " + servidor + nome + " mal formatada.");
-            } catch (RemoteException e) {
-                System.out.println(" Erro na invocação remota . ");
-                e.printStackTrace();
-            } catch (NotBoundException e) {
-                System.out.println(" Objeto remoto " + nome + " não está disponível.");
-                e.printStackTrace();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+
+            long fim = System.currentTimeMillis(); // Fim do tempo
+            long tempoExecucao = fim - inicio;
+            writer.write("Tempo de execução: " + tempoExecucao + " ms\n");
+            System.out.println("Tempo de execução salvo em execucao_calculadora_rmi.txt");
+
+        } catch (MalformedURLException | RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar o tempo de execução.");
+            e.printStackTrace();
+        }
     }
 }
